@@ -1,4 +1,7 @@
 from django.shortcuts import render
+# Add UdpateView & DeleteView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse
 from .models import Cat
 
 from django.http import HttpResponse
@@ -19,4 +22,15 @@ def cat_detail(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
   return render(request, 'cats/detail.html', { 'cat': cat })
 
+class CatCreate(CreateView):
+    model = Cat
+    fields = '__all__'
 
+class CatUpdate(UpdateView):
+    model = Cat
+    # Let's disallow the renaming of a cat by excluding the name field!
+    fields = ['breed', 'description', 'age']
+
+class CatDelete(DeleteView):
+    model = Cat
+    success_url = '/cats/'
